@@ -30,8 +30,8 @@ app/config/parameters.yml
 
 # IGNORE ALL...
 CHANGELOG.md
-LICENSE.md
-README.md
+# LICENSE.md
+# README.md
 UPGRADE_3.6.md
 /api
 /app
