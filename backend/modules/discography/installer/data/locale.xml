@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale>
+	<backend>
+		<discography>
+			<item type="label" name="Albums">
+				<translation language="nl"><![CDATA[albums]]></translation>
+				<translation language="en"><![CDATA[albums]]></translation>
+			</item>
+			<item type="label" name="ReleaseDate">
+				<translation language="nl"><![CDATA[release date]]></translation>
+				<translation language="en"><![CDATA[release date]]></translation>
+			</item>
+			<item type="label" name="Info">
+				<translation language="nl"><![CDATA[info]]></translation>
+				<translation language="en"><![CDATA[info]]></translation>
+			</item>
+			<item type="label" name="AddTrack">
+				<translation language="nl"><![CDATA[Voeg track toe]]></translation>
+				<translation language="en"><![CDATA[Add track]]></translation>
+			</item>
+			<item type="label" name="Duration">
+				<translation language="nl"><![CDATA[duur]]></translation>
+				<translation language="en"><![CDATA[duration]]></translation>
+			</item>
+			<item type="label" name="Tracks">
+				<translation language="nl"><![CDATA[nummers]]></translation>
+				<translation language="en"><![CDATA[tracks]]></translation>
+			</item>
+			<item type="label" name="Cover">
+				<translation language="nl"><![CDATA[cover]]></translation>
+				<translation language="en"><![CDATA[cover]]></translation>
+			</item>
+			<item type="label" name="WizardTitle">
+				<translation language="nl"><![CDATA[titel]]></translation>
+				<translation language="en"><![CDATA[title]]></translation>
+			</item>
+			<item type="label" name="WizardInfo">
+				<translation language="nl"><![CDATA[informatie]]></translation>
+				<translation language="en"><![CDATA[information]]></translation>
+			</item>
+			<item type="label" name="NumberAbbr">
+				<translation language="nl"><![CDATA[nr.]]></translation>
+				<translation language="en"><![CDATA[nr.]]></translation>
+			</item>
+			<item type="error" name="NoTracks">
+				<translation language="nl"><![CDATA[Er zijn nog geen nummers]]></translation>
+				<translation language="en"><![CDATA[There are no tracks yet]]></translation>
+			</item>
+			<item type="message" name="NoTracks">
+				<translation language="nl"><![CDATA[Er zijn nog geen nummers]]></translation>
+				<translation language="en"><![CDATA[There are no tracks yet]]></translation>
+			</item>
+		</discography>
+		<core>
+			<item type="label" name="Discography">
+				<translation language="nl"><![CDATA[discografie]]></translation>
+				<translation language="en"><![CDATA[discography]]></translation>
+			</item>
+		</core>
+	</backend>
+	<frontend>
+		<core>
+		</core>
+	</frontend>
+</locale>
