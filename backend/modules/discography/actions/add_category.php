@@ -31,61 +31,56 @@ class BackendDiscographyAddCategory extends BackendBaseActionAdd
 	/**
 	 * Load the form
 	 */
-	protected function loadForm()
+	private function loadForm()
 	{
-		$rbtVisibleValues[] = array(
-			'label' => BL::lbl('Hidden'),
-			'value' => 'N'
-		);
-		$rbtVisibleValues[] = array(
-			'label' => BL::lbl('Published'),
-			'value' => 'Y'
-		);
+		$this->frm = new BackendForm('addCategory');
+		$this->frm->addText('title', null, 255, 'inputText title', 'inputTextError title');
 
-		$this->frm = new BackendForm('add');
-		$this->frm->addText(
-			'title', null, null, 'inputText title', 'inputTextError title'
-		);
-		$this->frm->addRadiobutton('visible', $rbtVisibleValues, 'Y');
-
+		// meta
 		$this->meta = new BackendMeta($this->frm, null, 'title', true);
+
+		// set callback for generating an unique URL
+		$this->meta->setURLCallback('BackendDiscographyModel', 'getURLForCategory');
 	}
 
 	/**
 	 * Parse the page
 	 */
-	protected function parse()
-	{
-		parent::parse();
-
-		// assign the url for the detail page
-		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
-		$url404 = BackendModel::getURL(404);
-		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
-	}
+//	private function parse()
+//	{
+//		parent::parse();
+//
+//		// assign the url for the detail page
+//		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
+//		$url404 = BackendModel::getURL(404);
+//		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+//	}
 
 	/**
 	 * Validate the form
 	 */
-	protected function validateForm()
+	private function validateForm()
 	{
 		if($this->frm->isSubmitted())
 		{
+			// cleanup the submitted fields, ignore fields that were added by hackers
 			$this->frm->cleanupFields();
 
 			// validation
-			$fields = $this->frm->getFields();
-			$fields['title']->isFilled(BL::err('FieldIsRequired'));
+			$this->frm->getField('title')->isFilled(BL::err('TitleIsRequired'));
+
+			// validate meta
 			$this->meta->validate();
 
+			// no errors?
 			if($this->frm->isCorrect())
 			{
-				$item['meta_id'] = $this->meta->save();
-				$item['title'] = $fields['title']->getValue();
+				$item['title'] = $this->frm->getField('title')->getValue();
 				$item['language'] = BL::getWorkingLanguage();
-				$item['visible'] = $fields['visible']->getValue();
+				$item['meta_id'] = $this->meta->save();
 
-				$item['id'] = BackendDiscographyModel::insert($item);
+				// insert the category
+				$item['id'] = BackendDiscographyModel::insertCategory($item);
 
 				BackendSearchModel::saveIndex(
 					$this->getModule(),
@@ -93,12 +88,13 @@ class BackendDiscographyAddCategory extends BackendBaseActionAdd
 					array('title' => $item['title'], 'text' => $item['title'])
 				);
 
+				// trigger event
 				BackendModel::triggerEvent(
-					$this->getModule(), 'after_add', $item
+					$this->getModule(), 'after_add_category', $item
 				);
-				$this->redirect(
-					BackendModel::createURLForAction('index') . '&report=added&highlight=row-' . $item['id']
-				);
+
+				// everything is saved, so redirect to the overview
+				$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
 			}
 		}
 	}

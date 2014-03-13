@@ -38,7 +38,7 @@ class BackendDiscographyEditCategory extends BackendBaseActionEdit
 		$this->id = $this->getParameter('id', 'int');
 
 		// does the item exists
-		if($this->id == null || !BackendBlogModel::existsCategory($this->id))
+		if($this->id == null || !BackendDiscographyModel::existsCategory($this->id))
 		{
 			// no item found, throw an exception, because somebody is fucking with our URL
 			$this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');

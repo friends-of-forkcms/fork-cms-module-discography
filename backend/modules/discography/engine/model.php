@@ -267,6 +267,58 @@ class BackendDiscographyModel
 	}
 
 	/**
+	 * Retrieve the unique URL for a category
+	 *
+	 * @param string $URL The string whereon the URL will be based.
+	 * @param int[optional] $id The id of the category to ignore.
+	 * @return string
+	 */
+	public static function getURLForCategory($URL, $id = null)
+	{
+		// redefine URL
+		$URL = (string) $URL;
+
+		// get db
+		$db = BackendModel::getContainer()->get('database');
+
+		// new category
+		if($id === null)
+		{
+			// already exists
+			if((bool) $db->getVar(
+				'SELECT 1
+				 FROM discography_categories AS i
+				 INNER JOIN meta AS m ON i.meta_id = m.id
+				 WHERE i.language = ? AND m.url = ?
+				 LIMIT 1',
+				array(BL::getWorkingLanguage(), $URL)))
+			{
+				$URL = BackendModel::addNumber($URL);
+				return self::getURLForCategory($URL);
+			}
+		}
+
+		// current category should be excluded
+		else
+		{
+			// already exists
+			if((bool) $db->getVar(
+				'SELECT 1
+				 FROM discography_categories AS i
+				 INNER JOIN meta AS m ON i.meta_id = m.id
+				 WHERE i.language = ? AND m.url = ? AND i.id != ?
+				 LIMIT 1',
+				array(BL::getWorkingLanguage(), $URL, $id)))
+			{
+				$URL = BackendModel::addNumber($URL);
+				return self::getURLForCategory($URL, $id);
+			}
+		}
+
+		return $URL;
+	}
+
+	/**
 	 * Get the meta url
 	 *
 	 * @param $meta_id The meta id
@@ -306,6 +358,28 @@ class BackendDiscographyModel
 		$data['created_on'] = BackendModel::getUTCDate();
 
 		return (int) BackendModel::getContainer()->get('database')->insert('discography_albums_tracks', $data);
+	}
+
+	/**
+	 * Inserts a new category into the database
+	 *
+	 * @param array $item The data for the category to insert.
+	 * @param array[optional] $meta The metadata for the category to insert.
+	 * @return int
+	 */
+	public static function insertCategory(array $item, $meta = null)
+	{
+		// get db
+		$db = BackendModel::getContainer()->get('database');
+
+		// meta given?
+		if($meta !== null) $item['meta_id'] = $db->insert('meta', $meta);
+
+		// create category
+		$item['id'] = $db->insert('discography_categories', $item);
+
+		// return the id
+		return $item['id'];
 	}
 
 	/**
