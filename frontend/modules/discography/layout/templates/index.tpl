@@ -11,21 +11,33 @@
 {/option:!items}
 
 {option:items}
-	<div id="discographyIndex">
+	<div id="discography-main">
 		{iteration:items}
-			{*<article class="mod">*}
-				{*<div class="inner">*}
-					{*<header class="hd">*}
-						{*<h3><a href="{$items.full_url}" title="{$items.title}">{$items.title}</a></h3>*}
-					{*</header>*}
-					{*<div class="bd content">*}
-						{*{$items.text}*}
-					{*</div>*}
-				{*</div>*}
-			{*</article>*}
+			<section class="discography-category">
+				<header class="hd">
+					<h3>{$items.name}</h3>
+				</header>
 
-			{$items|dump}
+				{iteration:items.albums}
+					<div class="wrap {option:items.albums.first}first{/option:items.albums.first}">
+						<div class="album-thumbnail">
+							<a class="cover" href="{$items.albums.full_url}">
+								{option:items.albums.image}<img src="{$FRONTEND_FILES_URL}/discography/images/150x150/{$items.albums.image}" alt="{$items.albums.title}">{/option:items.albums.image}
+								{option:!items.albums.image}<img src="{$FRONTEND_FILES_URL}/discography/images/150x150/placeholder.png" alt="{$items.albums.title}">{/option:!items.albums.image}
+							</a>
+						</div>
+
+						<div class="album-label">
+							<div class="name"><a href="{$items.albums.full_url}" title="{$items.albums.title}">{$items.albums.title}</a></div>
+							<div class="year">{$items.albums.release_date|date:'Y'}</div>
+						</div>
+					</div>
+				{/iteration:items.albums}
+			</section>
+
+		{option:!items.last} <hr> {/option:!items.last}
 		{/iteration:items}
 	</div>
+
 	{include:core/layout/templates/pagination.tpl}
 {/option:items}
