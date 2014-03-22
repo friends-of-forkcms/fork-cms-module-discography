@@ -84,7 +84,6 @@ class BackendDiscographyCategories extends BackendBaseActionIndex
 
 		if($count > 1) $return = '<a href="' . $link . '">' . $count . ' ' . BL::getLabel('Articles') . '</a>';
 		elseif($count == 1) $return = '<a href="' . $link . '">' . $count . ' ' . BL::getLabel('Article') . '</a>';
-		elseif($count == 0) $return = 0;
 
 		return $return;
 	}

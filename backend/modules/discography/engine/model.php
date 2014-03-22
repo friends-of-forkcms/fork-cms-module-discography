@@ -383,6 +383,52 @@ class BackendDiscographyModel
 	}
 
 	/**
+	 * Deletes a category
+	 *
+	 * @param int $id The id of the category to delete.
+	 */
+	public static function deleteCategory($id)
+	{
+		$id = (int) $id;
+		$db = BackendModel::getContainer()->get('database');
+
+		// get item
+		$item = self::getCategory($id);
+
+		if(!empty($item))
+		{
+			// delete meta
+			$db->delete('meta', 'id = ?', array($item['meta_id']));
+
+			// delete category
+			$db->delete('discography_categories', 'id = ?', array($id));
+
+			// update category for the posts that might be in this category
+			$db->update('discography_albums', array('category_id' => null), 'category_id = ?', array($id));
+
+			// invalidate the cache for discography
+			BackendModel::invalidateFrontendCache('discography', BL::getWorkingLanguage());
+		}
+	}
+
+	/**
+	 * Checks if it is allowed to delete the a category
+	 *
+	 * @param int $id The id of the category.
+	 * @return bool
+	 */
+	public static function deleteCategoryAllowed($id)
+	{
+		return !(bool) BackendModel::getContainer()->get('database')->getVar(
+			'SELECT 1
+			 FROM discography_albums AS i
+			 WHERE i.category_id = ? AND i.hidden = ?
+			 LIMIT 1',
+			array((int) $id, 'N')
+		);
+	}
+
+	/**
 	 * Updates an item
 	 *
 	 * @param int $id

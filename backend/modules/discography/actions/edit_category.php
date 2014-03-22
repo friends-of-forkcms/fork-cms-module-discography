@@ -63,7 +63,11 @@ class BackendDiscographyEditCategory extends BackendBaseActionEdit
 	protected function parse()
 	{
 		parent::parse();
+
 		$this->tpl->assign('item', $this->record);
+
+		// delete allowed?
+		$this->tpl->assign('showDiscographyDeleteCategory', BackendDiscographyModel::deleteCategoryAllowed($this->id) && BackendModel::createURLForAction('delete_category'));
 	}
 
 	/**
@@ -87,11 +91,11 @@ class BackendDiscographyEditCategory extends BackendBaseActionEdit
 				BackendDiscographyModel::updateCategory($item);
 
 				BackendModel::triggerEvent(
-					$this->getModule(), 'after_edit', $item
+					$this->getModule(), 'after_edit_category', $item
 				);
-				$this->redirect(
-					BackendModel::createURLForAction('categories') . '&report=edited&highlight=row-' . $item['id']
-				);
+
+				// everything is saved, so redirect to the overview
+				$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
 			}
 		}
 	}
