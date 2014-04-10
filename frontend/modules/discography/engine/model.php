@@ -88,47 +88,85 @@ class FrontendDiscographyModel
 	 * @param  int $id The album ID
 	 * @return Array The album data
 	 */
-	public static function getDataForId($id)
+	public static function getById($id)
 	{
-		$results = (array) FrontendModel::getContainer()->get('database')->getRecords(
+		// Get album
+		$result = (array) FrontendModel::getContainer()->get('database')->getRecord(
 			'SELECT
-				a.id, a.title AS album_title, a.release_date, a.image, UNIX_TIMESTAMP(a.created_on) AS created_on, m.url, t.title AS track_title, t.duration, t.sequence
+			a.id,
+			a.title,
+			a.release_date, a.image,
+			UNIX_TIMESTAMP(a.created_on) AS created_on,
+			m.keywords AS meta_keywords,
+			m.keywords_overwrite AS meta_keywords_overwrite,
+			m.description AS meta_description,
+			m.description_overwrite AS meta_description_overwrite,
+			m.title AS meta_title,
+			m.title_overwrite AS meta_title_overwrite,
+			m.url,
+			m.data AS meta_data
+			FROM discography_albums AS a
+			INNER JOIN meta AS m ON m.id = a.meta_id
+			WHERE a.id = ? AND a.hidden = ?',
+			array((int) $id, 'N')
+		);
+
+		// Get tracks (if available)
+		$tracks = (array) FrontendModel::getContainer()->get('database')->getRecords(
+			'SELECT
+			t.title AS title,
+			t.duration,
+			t.sequence
 			FROM discography_albums AS a
 			INNER JOIN discography_albums_tracks AS t ON t.album_id = a.id
-			INNER JOIN meta AS m ON m.id = a.meta_id
 			WHERE a.id = ? AND a.hidden = ?
 			ORDER BY t.sequence',
 			array((int) $id, 'N')
 		);
 
-		// rebuild the array
-		$albumData = array(
-			'id' => $results[0]['id'],
-			'title' => $results[0]['album_title'],
-			'release_date' => $results[0]['release_date'],
-			'image' => $results[0]['image'],
-			'created_on' => $results[0]['created_on'],
-			'url' => $results[0]['url'],
-			'tracks' => array()
-		);
-
-		// add tracks to new array
-		foreach($results as $result)
-		{
-			$albumData['tracks'][] = array(
-				'sequence' => $result['sequence'],
-				'title' => $result['track_title'],
-				'duration' => $result['duration']
-			);
-		}
+		// Add tracks to album array
+		if(isset($tracks)) $result['tracks'] = $tracks;
 
 		// build the full url for the specific item
 		$albumDetailUrl = FrontendNavigation::getURLForBlock('discography', 'detail');
-		$albumData['full_url'] = $albumDetailUrl . '/' . $albumData['url'];
+		$result['full_url'] = $albumDetailUrl . '/' . $result['url'];
 
 		// get the meta data
-		//$albumData = self::buildMetaData($albumData);
+		$result = self::buildMetaData($result);
 
-		return $albumData;
+		return $result;
+	}
+
+	/**
+	 * Builds the meta
+	 *
+	 * @param array $data The data to convert the meta from.
+	 * @return array
+	 */
+	public static function buildMetaData(array $data)
+	{
+		// return if no data is given
+		if(empty($data)) return array();
+
+		// the meta
+		$meta = array();
+
+		// loop the data
+		foreach($data as $key => $column)
+		{
+			// if there is meta_ set in the column name
+			if(strpos($key, 'meta_') !== false)
+			{
+				$metaKey = substr($key, 5);
+				$meta[$metaKey] = $column;
+				unset($data[$key]);
+			}
+		}
+
+		// add the meta
+		$data['meta'] = $meta;
+
+		// return
+		return $data;
 	}
 }

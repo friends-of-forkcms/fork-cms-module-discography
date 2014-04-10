@@ -42,7 +42,7 @@ class FrontendDiscographyDetail extends FrontendBaseBlock
 		$albumId = ($albumUrl === null) ? 0 : FrontendDiscographyModel::getIdForUrl($albumUrl);
 		if($albumId == 0) $this->redirect(FrontendNavigation::getURL(404));
 
-		$this->record = FrontendDiscographyModel::getDataForId($albumId);
+		$this->record = FrontendDiscographyModel::getById($albumId);
 	}
 
 	/**
@@ -51,5 +51,10 @@ class FrontendDiscographyDetail extends FrontendBaseBlock
 	protected function parse()
 	{
 		$this->tpl->assign('album', $this->record);
+
+		// Set meta
+		$this->header->setPageTitle($this->record['meta']['title'], ($this->record['meta']['title_overwrite'] == 'Y'));
+		$this->header->addMetaDescription($this->record['meta']['description'], ($this->record['meta']['description_overwrite'] == 'Y'));
+		$this->header->addMetaKeywords($this->record['meta']['keywords'], ($this->record['meta']['title_overwrite'] == 'Y'));
 	}
 }
