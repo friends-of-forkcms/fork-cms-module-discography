@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
 	<name>discography</name>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<requirements>
 		<minimum_version>Fork CMS 3.5</minimum_version>
 	</requirements>
