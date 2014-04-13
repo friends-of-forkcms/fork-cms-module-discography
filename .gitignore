@@ -40,7 +40,7 @@ autoload.php
 composer.json
 composer.lock
 favicon.ico
-index.php
+/index.php
 /install
 /library
 tile.png
