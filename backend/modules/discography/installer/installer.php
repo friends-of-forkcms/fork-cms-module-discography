@@ -86,19 +86,23 @@ class DiscographyInstaller extends ModuleInstaller
 		// get db instance
 		$db = $this->getDB();
 
-		$db->insert('discography_categories', array(
-			'id' => NULL,
-			'meta_id' => 0,
-			'language' => 'en',
-			'title' => 'Albums'
-		));
+		// insert default category for every language
+		foreach($this->getLanguages() as $language)
+		{
+			$db->insert('discography_categories', array(
+				'id' => NULL,
+				'meta_id' => 0,
+				'language' => $language,
+				'title' => 'Albums'
+			));
 
-		$db->insert('discography_categories', array(
-			'id' => NULL,
-			'meta_id' => 0,
-			'language' => 'en',
-			'title' => 'EP\'s'
-		));
+			$db->insert('discography_categories', array(
+				'id' => NULL,
+				'meta_id' => 0,
+				'language' => $language,
+				'title' => 'EP\'s'
+			));
+		}
 	}
 
 	/**

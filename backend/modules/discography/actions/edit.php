@@ -97,9 +97,8 @@ class BackendDiscographyEdit extends BackendBaseActionEdit
 						);
 					}
 				}
-
-				$this->dgTracks = $tracks;
 			}
+			$this->newTracks = $tracks;
 		}
 		// not yet submitted so use database values
 		else $tracks = $this->tracks;
@@ -161,7 +160,7 @@ class BackendDiscographyEdit extends BackendBaseActionEdit
 			$this->meta->validate();
 
 			// not enough tracks
-			if(count($this->tracks) == 0)
+			if(count($this->newTracks) == 0)
 			{
 				$this->tpl->assign('noTracks', true);
 				$this->frm->addError('noTracks');
@@ -245,7 +244,7 @@ class BackendDiscographyEdit extends BackendBaseActionEdit
 				);
 
 				// usable array with tracks
-				$tracks = $this->dgTracks;
+				$tracks = $this->newTracks;
 
 				// not enough tracks
 				if(count($tracks) == 0)
