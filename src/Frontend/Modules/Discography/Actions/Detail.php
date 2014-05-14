@@ -20,48 +20,48 @@ use Frontend\Modules\Discography\Engine\Model as FrontendDiscographyModel;
  */
 class Detail extends FrontendBaseBlock
 {
-	/**
-	 * The album data
-	 *
-	 * @var array
-	 */
-	private $record;
+    /**
+     * The album data
+     *
+     * @var array
+     */
+    private $record;
 
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		parent::execute();
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        parent::execute();
 
-		$this->loadTemplate();
-		$this->loadData();
-		$this->parse();
-	}
+        $this->loadTemplate();
+        $this->loadData();
+        $this->parse();
+    }
 
-	/**
-	 * Load the data
-	 */
-	protected function loadData()
-	{
-		$albumUrl = ($this->URL->getParameter(1) === null) ? $this->URL->getParameter(0) : $this->URL->getParameter(1);
-		$albumId = ($albumUrl === null) ? 0 : FrontendDiscographyModel::getIdForUrl($albumUrl);
-		if($albumId == 0) $this->redirect(FrontendNavigation::getURL(404));
+    /**
+     * Load the data
+     */
+    protected function loadData()
+    {
+        $albumUrl = ($this->URL->getParameter(1) === null) ? $this->URL->getParameter(0) : $this->URL->getParameter(1);
+        $albumId = ($albumUrl === null) ? 0 : FrontendDiscographyModel::getIdForUrl($albumUrl);
+        if($albumId == 0) $this->redirect(FrontendNavigation::getURL(404));
 
-		$this->record = FrontendDiscographyModel::getById($albumId);
-	}
+        $this->record = FrontendDiscographyModel::getById($albumId);
+    }
 
-	/**
-	 * Parse the page
-	 */
-	protected function parse()
-	{
-		$this->tpl->assign('album', $this->record);
-		$this->tpl->assign('discographyUrl', FrontendNavigation::getURLForBlock('Discography'));
+    /**
+     * Parse the page
+     */
+    protected function parse()
+    {
+        $this->tpl->assign('album', $this->record);
+        $this->tpl->assign('discographyUrl', FrontendNavigation::getURLForBlock('Discography'));
 
-		// Set meta
-		$this->header->setPageTitle($this->record['meta']['title'], ($this->record['meta']['title_overwrite'] == 'Y'));
-		$this->header->addMetaDescription($this->record['meta']['description'], ($this->record['meta']['description_overwrite'] == 'Y'));
-		$this->header->addMetaKeywords($this->record['meta']['keywords'], ($this->record['meta']['title_overwrite'] == 'Y'));
-	}
+        // Set meta
+        $this->header->setPageTitle($this->record['meta']['title'], ($this->record['meta']['title_overwrite'] == 'Y'));
+        $this->header->addMetaDescription($this->record['meta']['description'], ($this->record['meta']['description_overwrite'] == 'Y'));
+        $this->header->addMetaKeywords($this->record['meta']['keywords'], ($this->record['meta']['title_overwrite'] == 'Y'));
+    }
 }

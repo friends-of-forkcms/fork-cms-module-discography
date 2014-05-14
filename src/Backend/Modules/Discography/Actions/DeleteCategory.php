@@ -20,39 +20,39 @@ use Backend\Modules\Discography\Engine\Model as BackendDiscographyModel;
  */
 class DeleteCategory extends BackendBaseActionDelete
 {
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		$this->id = $this->getParameter('id', 'int');
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        $this->id = $this->getParameter('id', 'int');
 
-		// does the item exist
-		if($this->id !== null && BackendDiscographyModel::existsCategory($this->id)) {
-			// get data
-			$this->record = (array) BackendDiscographyModel::getCategory($this->id);
+        // does the item exist
+        if($this->id !== null && BackendDiscographyModel::existsCategory($this->id)) {
+            // get data
+            $this->record = (array) BackendDiscographyModel::getCategory($this->id);
 
-			// allowed to delete the category?
-			if(BackendDiscographyModel::deleteCategoryAllowed($this->id)) {
-				// call parent, this will probably add some general CSS/JS or other required files
-				parent::execute();
+            // allowed to delete the category?
+            if(BackendDiscographyModel::deleteCategoryAllowed($this->id)) {
+                // call parent, this will probably add some general CSS/JS or other required files
+                parent::execute();
 
-				// delete item
-				BackendDiscographyModel::deleteCategory($this->id);
+                // delete item
+                BackendDiscographyModel::deleteCategory($this->id);
 
-				// trigger event
-				BackendModel::triggerEvent($this->getModule(), 'after_delete_category', array('id' => $this->id));
+                // trigger event
+                BackendModel::triggerEvent($this->getModule(), 'after_delete_category', array('id' => $this->id));
 
-				// category was deleted, so redirect
-				$this->redirect(BackendModel::createURLForAction('Categories') . '&report=deleted-category&var=' . urlencode($this->record['title']));
-			}
+                // category was deleted, so redirect
+                $this->redirect(BackendModel::createURLForAction('Categories') . '&report=deleted-category&var=' . urlencode($this->record['title']));
+            }
 
 
-			// delete category not allowed
-			else $this->redirect(BackendModel::createURLForAction('Categories') . '&error=delete-category-not-allowed&var=' . urlencode($this->record['title']));
-		}
+            // delete category not allowed
+            else $this->redirect(BackendModel::createURLForAction('Categories') . '&error=delete-category-not-allowed&var=' . urlencode($this->record['title']));
+        }
 
-		// something went wrong
-		else $this->redirect(BackendModel::createURLForAction('Categories') . '&error=non-existing');
-	}
+        // something went wrong
+        else $this->redirect(BackendModel::createURLForAction('Categories') . '&error=non-existing');
+    }
 }

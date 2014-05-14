@@ -18,30 +18,30 @@ use Backend\Modules\Discography\Engine\Model as BackendDiscographyModel;
  */
 class AddTrack extends BackendBaseAJAXAction
 {
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		parent::execute();
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        parent::execute();
 
-		// get parameters
-		$trackTitle = trim(SpoonFilter::getPostValue('title', null, '', 'string'));
-		$albumId = SpoonFilter::getPostValue('albumId', null, '', 'int');
+        // get parameters
+        $trackTitle = trim(SpoonFilter::getPostValue('title', null, '', 'string'));
+        $albumId = SpoonFilter::getPostValue('albumId', null, '', 'int');
 
-		// validate
-		if($trackTitle === '') $this->output(self::BAD_REQUEST, null, BL::err('TitleIsRequired'));
+        // validate
+        if($trackTitle === '') $this->output(self::BAD_REQUEST, null, BL::err('TitleIsRequired'));
 
-		// get the data
-		// build array
-		$track['album_id'] = $albumId;
-		$track['title'] = SpoonFilter::htmlspecialchars($trackTitle);
-		$track['sequence'] = BackendDiscographyModel::getMaxTrackSequence($albumId) + 1;
+        // get the data
+        // build array
+        $track['album_id'] = $albumId;
+        $track['title'] = SpoonFilter::htmlspecialchars($trackTitle);
+        $track['sequence'] = BackendDiscographyModel::getMaxTrackSequence($albumId) + 1;
 
-		// insert
-		$track['id'] = BackendDiscographyModel::insertTrack($track);
+        // insert
+        $track['id'] = BackendDiscographyModel::insertTrack($track);
 
-		// output
-		$this->output(self::OK, $track, vsprintf(BL::msg('AddedCategory'), array($track['title'])));
-	}
+        // output
+        $this->output(self::OK, $track, vsprintf(BL::msg('AddedCategory'), array($track['title'])));
+    }
 }

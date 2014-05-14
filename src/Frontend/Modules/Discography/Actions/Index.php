@@ -19,37 +19,37 @@ use Frontend\Modules\Discography\Engine\Model as FrontendDiscographyModel;
  */
 class Index extends FrontendBaseBlock
 {
-	/**
-	 * The record data
-	 *
-	 * @var array
-	 */
-	private $record;
+    /**
+     * The record data
+     *
+     * @var array
+     */
+    private $record;
 
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		parent::execute();
-		$this->loadTemplate();
-		$this->loadData();
-		$this->parse();
-	}
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        parent::execute();
+        $this->loadTemplate();
+        $this->loadData();
+        $this->parse();
+    }
 
-	/**
-	 * Load the data
-	 */
-	protected function loadData()
-	{
-		$this->record = FrontendDiscographyModel::getAll();
-	}
+    /**
+     * Load the data
+     */
+    protected function loadData()
+    {
+        $this->record = FrontendDiscographyModel::getAll();
+    }
 
-	/**
-	 * Parse the page
-	 */
-	protected function parse()
-	{
-		$this->tpl->assign('items', $this->record);
-	}
+    /**
+     * Parse the page
+     */
+    protected function parse()
+    {
+        $this->tpl->assign('items', $this->record);
+    }
 }

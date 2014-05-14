@@ -12,11 +12,11 @@
  */
 jsFrontend.discography =
 {
-	// constructor
-	init: function()
-	{
+    // constructor
+    init: function()
+    {
 
-	}
+    }
 };
 
 $(jsFrontend.discography.init);

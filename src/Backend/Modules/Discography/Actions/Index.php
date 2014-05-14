@@ -24,66 +24,66 @@ use Backend\Modules\Discography\Engine\Model as BackendDiscographyModel;
  */
 class Index extends BackendBaseActionIndex
 {
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		parent::execute();
-		$this->loadDataGrid();
-		$this->parse();
-		$this->display();
-	}
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        parent::execute();
+        $this->loadDataGrid();
+        $this->parse();
+        $this->display();
+    }
 
-	/**
-	 * Load the dataGrid
-	 */
-	protected function loadDataGrid()
-	{
-		// create datagrid
-		$this->dataGrid = new BackendDataGridDB(BackendDiscographyModel::QRY_DATAGRID_BROWSE);
+    /**
+     * Load the dataGrid
+     */
+    protected function loadDataGrid()
+    {
+        // create datagrid
+        $this->dataGrid = new BackendDataGridDB(BackendDiscographyModel::QRY_DATAGRID_BROWSE);
 
-		// set headers
-		$this->dataGrid->setHeaderLabels(array('category' => \SpoonFilter::ucfirst(BL::lbl('Category'))));
-		$this->dataGrid->setHeaderLabels(array('date' => \SpoonFilter::ucfirst(BL::lbl('ReleaseDate'))));
+        // set headers
+        $this->dataGrid->setHeaderLabels(array('category' => \SpoonFilter::ucfirst(BL::lbl('Category'))));
+        $this->dataGrid->setHeaderLabels(array('date' => \SpoonFilter::ucfirst(BL::lbl('ReleaseDate'))));
 
-		// add columns
-		$this->dataGrid->addColumn('cover', \SpoonFilter::ucfirst(BL::lbl('Cover')));
+        // add columns
+        $this->dataGrid->addColumn('cover', \SpoonFilter::ucfirst(BL::lbl('Cover')));
 
-		// linkify the title column to the edit page
-		$this->dataGrid->setColumnURL('title', BackendModel::createURLForAction('Edit') . '&amp;id=[id]');
-		$this->dataGrid->setColumnURL('cover', BackendModel::createURLForAction('Edit') . '&amp;id=[id]');
+        // linkify the title column to the edit page
+        $this->dataGrid->setColumnURL('title', BackendModel::createURLForAction('Edit') . '&amp;id=[id]');
+        $this->dataGrid->setColumnURL('cover', BackendModel::createURLForAction('Edit') . '&amp;id=[id]');
 
-		// set columns functions
-		$this->dataGrid->setColumnFunction(array(new BackendDiscographyModel(), 'getCoverImageThumb'), array('[id]', $this->getModule()), 'cover', true);
-		$this->dataGrid->setColumnFunction(array(new BackendDiscographyModel(), 'getMonthYearDate'), array('[date]'), 'date', true);
+        // set columns functions
+        $this->dataGrid->setColumnFunction(array(new BackendDiscographyModel(), 'getCoverImageThumb'), array('[id]', $this->getModule()), 'cover', true);
+        $this->dataGrid->setColumnFunction(array(new BackendDiscographyModel(), 'getMonthYearDate'), array('[date]'), 'date', true);
 
-		// sorting columns
-		$this->dataGrid->setSortingColumns(array('title', 'date', 'category'), 'date');
-		$this->dataGrid->setSortParameter('desc');
+        // sorting columns
+        $this->dataGrid->setSortingColumns(array('title', 'date', 'category'), 'date');
+        $this->dataGrid->setSortParameter('desc');
 
-		// check if this action is allowed
-		if(BackendAuthentication::isAllowedAction('Edit')) {
-			$this->dataGrid->addColumn(
-				'edit', null, BL::lbl('Edit'),
-				BackendModel::createURLForAction('Edit') . '&amp;id=[id]',
-				BL::lbl('Edit')
-			);
-		}
+        // check if this action is allowed
+        if(BackendAuthentication::isAllowedAction('Edit')) {
+            $this->dataGrid->addColumn(
+                'edit', null, BL::lbl('Edit'),
+                BackendModel::createURLForAction('Edit') . '&amp;id=[id]',
+                BL::lbl('Edit')
+            );
+        }
 
-		// Set sequence of the columns
-		$this->dataGrid->setColumnsSequence(array('cover','date','title','category','edit'));
-	}
+        // Set sequence of the columns
+        $this->dataGrid->setColumnsSequence(array('cover','date','title','category','edit'));
+    }
 
-	/**
-	 * Parse the page
-	 */
-	protected function parse()
-	{
-		// parse the dataGrid if there are results
-		$this->tpl->assign(
-			'dataGrid',
-			($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false
-		);
-	}
+    /**
+     * Parse the page
+     */
+    protected function parse()
+    {
+        // parse the dataGrid if there are results
+        $this->tpl->assign(
+            'dataGrid',
+            ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false
+        );
+    }
 }

@@ -22,83 +22,83 @@ use Backend\Core\Engine\Language as BL;
  */
 class EditCategory extends BackendBaseActionEdit
 {
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		$this->id = $this->getParameter('id', 'int');
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        $this->id = $this->getParameter('id', 'int');
 
-		// does the item exist
-		if($this->id !== null && BackendDiscographyModel::exists($this->id)) {
-			parent::execute();
-			$this->getData();
-			$this->loadForm();
-			$this->validateForm();
-			$this->parse();
-			$this->display();
-		}
+        // does the item exist
+        if($this->id !== null && BackendDiscographyModel::exists($this->id)) {
+            parent::execute();
+            $this->getData();
+            $this->loadForm();
+            $this->validateForm();
+            $this->parse();
+            $this->display();
+        }
 
-		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('Index') . '&error=non-existing');
-	}
+        // no item found, throw an exception, because somebody is fucking with our URL
+        else $this->redirect(BackendModel::createURLForAction('Index') . '&error=non-existing');
+    }
 
-	/**
-	 * Load the item data
-	 */
-	protected function getData()
-	{
-		$this->record = BackendDiscographyModel::getCategory($this->id);
-	}
+    /**
+     * Load the item data
+     */
+    protected function getData()
+    {
+        $this->record = BackendDiscographyModel::getCategory($this->id);
+    }
 
-	/**
-	 * Load the form
-	 */
-	protected function loadForm()
-	{
-		// create form
-		$this->frm = new BackendForm('edit');
-		$this->frm->addText('title', $this->record['title'], 255, 'inputText title', 'inputTextError title');
-	}
+    /**
+     * Load the form
+     */
+    protected function loadForm()
+    {
+        // create form
+        $this->frm = new BackendForm('edit');
+        $this->frm->addText('title', $this->record['title'], 255, 'inputText title', 'inputTextError title');
+    }
 
-	/**
-	 * Parse the page
-	 */
-	protected function parse()
-	{
-		parent::parse();
+    /**
+     * Parse the page
+     */
+    protected function parse()
+    {
+        parent::parse();
 
-		$this->tpl->assign('item', $this->record);
+        $this->tpl->assign('item', $this->record);
 
-		// delete allowed?
-		$this->tpl->assign('showDiscographyDeleteCategory', BackendDiscographyModel::deleteCategoryAllowed($this->id) && BackendModel::createURLForAction('delete_category'));
-	}
+        // delete allowed?
+        $this->tpl->assign('showDiscographyDeleteCategory', BackendDiscographyModel::deleteCategoryAllowed($this->id) && BackendModel::createURLForAction('delete_category'));
+    }
 
-	/**
-	 * Validate the form
-	 */
-	protected function validateForm()
-	{
-		if($this->frm->isSubmitted()) {
-			$this->frm->cleanupFields();
+    /**
+     * Validate the form
+     */
+    protected function validateForm()
+    {
+        if($this->frm->isSubmitted()) {
+            $this->frm->cleanupFields();
 
-			// validation
-			$fields = $this->frm->getFields();
-			$fields['title']->isFilled(BL::err('TitleIsRequired'));
+            // validation
+            $fields = $this->frm->getFields();
+            $fields['title']->isFilled(BL::err('TitleIsRequired'));
 
-			if($this->frm->isCorrect()) {
-				$item['id'] = $this->id;
-				$item['title'] = $fields['title']->getValue();
+            if($this->frm->isCorrect()) {
+                $item['id'] = $this->id;
+                $item['title'] = $fields['title']->getValue();
 
-				BackendDiscographyModel::updateCategory($item);
+                BackendDiscographyModel::updateCategory($item);
 
-				BackendModel::triggerEvent(
-					$this->getModule(), 'after_edit_category', $item
-				);
+                BackendModel::triggerEvent(
+                    $this->getModule(), 'after_edit_category', $item
+                );
 
-				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('Categories') . '&report=edited-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
-			}
-		}
-	}
+                // everything is saved, so redirect to the overview
+                $this->redirect(BackendModel::createURLForAction('Categories') . '&report=edited-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
+            }
+        }
+    }
 }

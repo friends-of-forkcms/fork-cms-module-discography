@@ -24,74 +24,74 @@ use Backend\Modules\Search\Engine\Model as BackendSearchModel;
  */
 class Add extends BackendBaseActionAdd
 {
-	/**
-	 * Execute the actions
-	 */
-	public function execute()
-	{
-		parent::execute();
+    /**
+     * Execute the actions
+     */
+    public function execute()
+    {
+        parent::execute();
 
-		$this->loadForm();
-		$this->validateForm();
+        $this->loadForm();
+        $this->validateForm();
 
-		$this->parse();
-		$this->display();
-	}
+        $this->parse();
+        $this->display();
+    }
 
-	/**
-	 * Load the form
-	 */
-	protected function loadForm()
-	{
-		// create form
-		$this->frm = new BackendForm('add');
-		$this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
+    /**
+     * Load the form
+     */
+    protected function loadForm()
+    {
+        // create form
+        $this->frm = new BackendForm('add');
+        $this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
 
-		// load meta
-		$this->meta = new BackendMeta($this->frm, null, 'title', true);
-	}
+        // load meta
+        $this->meta = new BackendMeta($this->frm, null, 'title', true);
+    }
 
-	/**
-	 * Parse the page
-	 */
-	protected function parse()
-	{
-		parent::parse();
+    /**
+     * Parse the page
+     */
+    protected function parse()
+    {
+        parent::parse();
 
-		// assign the url for the detail page
-		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
-		$url404 = BackendModel::getURL(404);
-		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
-	}
+        // assign the url for the detail page
+        $url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
+        $url404 = BackendModel::getURL(404);
+        if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+    }
 
-	/**
-	 * Validate the form
-	 */
-	protected function validateForm()
-	{
-		if($this->frm->isSubmitted()) {
-			$this->frm->cleanupFields();
+    /**
+     * Validate the form
+     */
+    protected function validateForm()
+    {
+        if($this->frm->isSubmitted()) {
+            $this->frm->cleanupFields();
 
-			// validation
-			$fields = $this->frm->getFields();
-			$fields['title']->isFilled(BL::err('TitleIsRequired'));
-			$this->meta->validate();
+            // validation
+            $fields = $this->frm->getFields();
+            $fields['title']->isFilled(BL::err('TitleIsRequired'));
+            $this->meta->validate();
 
-			if($this->frm->isCorrect()) {
-				$item['meta_id'] = $this->meta->save();
-				$item['title'] = $fields['title']->getValue();
+            if($this->frm->isCorrect()) {
+                $item['meta_id'] = $this->meta->save();
+                $item['title'] = $fields['title']->getValue();
 
-				$item['id'] = BackendDiscographyModel::insert($item);
+                $item['id'] = BackendDiscographyModel::insert($item);
 
-				BackendSearchModel::saveIndex(
-					$this->getModule(),
-					$item['id'],
-					array('title' => $item['title'], 'text' => $item['title'])
-				);
+                BackendSearchModel::saveIndex(
+                    $this->getModule(),
+                    $item['id'],
+                    array('title' => $item['title'], 'text' => $item['title'])
+                );
 
-				// everything is saved, so redirect
-				$this->redirect(BackendModel::createURLForAction('AddInfo') . '&id=' . $item['id']);
-			}
-		}
-	}
+                // everything is saved, so redirect
+                $this->redirect(BackendModel::createURLForAction('AddInfo') . '&id=' . $item['id']);
+            }
+        }
+    }
 }

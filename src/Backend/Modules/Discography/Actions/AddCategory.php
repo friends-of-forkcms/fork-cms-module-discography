@@ -24,86 +24,86 @@ use Backend\Modules\Search\Engine\Model as BackendSearchModel;
  */
 class AddCategory extends BackendBaseActionAdd
 {
-	/**
-	 * Execute the actions
-	 */
-	public function execute()
-	{
-		parent::execute();
+    /**
+     * Execute the actions
+     */
+    public function execute()
+    {
+        parent::execute();
 
-		$this->loadForm();
-		$this->validateForm();
+        $this->loadForm();
+        $this->validateForm();
 
-		$this->parse();
-		$this->display();
-	}
+        $this->parse();
+        $this->display();
+    }
 
-	/**
-	 * Load the form
-	 */
-	private function loadForm()
-	{
-		$this->frm = new BackendForm('addCategory');
-		$this->frm->addText('title', null, 255, 'inputText title', 'inputTextError title');
+    /**
+     * Load the form
+     */
+    private function loadForm()
+    {
+        $this->frm = new BackendForm('addCategory');
+        $this->frm->addText('title', null, 255, 'inputText title', 'inputTextError title');
 
-		// meta
-		$this->meta = new BackendMeta($this->frm, null, 'title', true);
+        // meta
+        $this->meta = new BackendMeta($this->frm, null, 'title', true);
 
-		// set callback for generating an unique URL
-		$this->meta->setUrlCallback('Backend\Modules\Discography\Engine\Model', 'getURLForCategory');
-	}
+        // set callback for generating an unique URL
+        $this->meta->setUrlCallback('Backend\Modules\Discography\Engine\Model', 'getURLForCategory');
+    }
 
-	/**
-	 * Parse the page
-	 */
-//	private function parse()
-//	{
-//		parent::parse();
+    /**
+     * Parse the page
+     */
+//  private function parse()
+//  {
+//      parent::parse();
 //
-//		// assign the url for the detail page
-//		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
-//		$url404 = BackendModel::getURL(404);
-//		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
-//	}
+//      // assign the url for the detail page
+//      $url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
+//      $url404 = BackendModel::getURL(404);
+//      if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+//  }
 
-	/**
-	 * Validate the form
-	 */
-	private function validateForm()
-	{
-		if($this->frm->isSubmitted()) {
-			// cleanup the submitted fields, ignore fields that were added by hackers
-			$this->frm->cleanupFields();
+    /**
+     * Validate the form
+     */
+    private function validateForm()
+    {
+        if($this->frm->isSubmitted()) {
+            // cleanup the submitted fields, ignore fields that were added by hackers
+            $this->frm->cleanupFields();
 
-			// validation
-			$this->frm->getField('title')->isFilled(BL::err('TitleIsRequired'));
+            // validation
+            $this->frm->getField('title')->isFilled(BL::err('TitleIsRequired'));
 
-			// validate meta
-			$this->meta->validate();
+            // validate meta
+            $this->meta->validate();
 
-			// no errors?
-			if($this->frm->isCorrect()) {
-				$item['title'] = $this->frm->getField('title')->getValue();
-				$item['language'] = BL::getWorkingLanguage();
-				$item['meta_id'] = $this->meta->save();
+            // no errors?
+            if($this->frm->isCorrect()) {
+                $item['title'] = $this->frm->getField('title')->getValue();
+                $item['language'] = BL::getWorkingLanguage();
+                $item['meta_id'] = $this->meta->save();
 
-				// insert the category
-				$item['id'] = BackendDiscographyModel::insertCategory($item);
+                // insert the category
+                $item['id'] = BackendDiscographyModel::insertCategory($item);
 
-				BackendSearchModel::saveIndex(
-					$this->getModule(),
-					$item['id'],
-					array('title' => $item['title'], 'text' => $item['title'])
-				);
+                BackendSearchModel::saveIndex(
+                    $this->getModule(),
+                    $item['id'],
+                    array('title' => $item['title'], 'text' => $item['title'])
+                );
 
-				// trigger event
-				BackendModel::triggerEvent(
-					$this->getModule(), 'after_add_category', $item
-				);
+                // trigger event
+                BackendModel::triggerEvent(
+                    $this->getModule(), 'after_add_category', $item
+                );
 
-				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('Categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
-			}
-		}
-	}
+                // everything is saved, so redirect to the overview
+                $this->redirect(BackendModel::createURLForAction('Categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
+            }
+        }
+    }
 }

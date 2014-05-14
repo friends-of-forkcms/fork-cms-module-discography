@@ -17,35 +17,35 @@ use Backend\Modules\Discography\Engine\Model as BackendDiscographyModel;
  */
 class Sequence extends BackendBaseAJAXAction
 {
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		// call parent, this will probably add some general CSS/JS or other required files
-		parent::execute();
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        // call parent, this will probably add some general CSS/JS or other required files
+        parent::execute();
 
-		// get parameters
-		$newIdSequence = trim(SpoonFilter::getPostValue('new_id_sequence', null, '', 'string'));
+        // get parameters
+        $newIdSequence = trim(SpoonFilter::getPostValue('new_id_sequence', null, '', 'string'));
 
-		// list id
-		$ids = (array) explode(',', rtrim($newIdSequence, ','));
-		$ids = array_reverse($ids);
-		$count = count($ids);
+        // list id
+        $ids = (array) explode(',', rtrim($newIdSequence, ','));
+        $ids = array_reverse($ids);
+        $count = count($ids);
 
-		// loop id's and set new sequence
-		foreach($ids as $i => $id) {
-			// build item
-			$item['id'] = (int) $id;
+        // loop id's and set new sequence
+        foreach($ids as $i => $id) {
+            // build item
+            $item['id'] = (int) $id;
 
-			// change sequence
-			$item['sequence'] = $count--;
+            // change sequence
+            $item['sequence'] = $count--;
 
-			// update sequence
-			if(BackendDiscographyModel::existsTrack($item['id'])) BackendDiscographyModel::updateTrack($item);
-		}
+            // update sequence
+            if(BackendDiscographyModel::existsTrack($item['id'])) BackendDiscographyModel::updateTrack($item);
+        }
 
-		// success output
-		$this->output(self::OK, null, 'sequence updated');
-	}
+        // success output
+        $this->output(self::OK, null, 'sequence updated');
+    }
 }
