@@ -1,30 +1,24 @@
 # README
 
+## Description
+The Fork CMS Discography module let's you create a discography page on your website displaying the artist his albums, EP's, ...
+
+Each album can have a title, cover art, track listing w/ duration, release date, ... You can organize the albums in different categories (e.g Albums, EP's, Compilation albums, Live cd's, ...).
+
+## Preview
+![Walkthrough of the module](http://i.imgur.com/qfAEpUK.gif "Walkthrough of the module")
+
 ## Installation
 
-1. Upload all of the content into your document root
-3. Browse to your website
-4. Follow the steps on-screen
+1. Upload the `/src/Backend/Modules/Discography` folder to your `/src/Backend/Modules` folder and your `/src/Frontend/Modules/Discography` folder to `/src/Frontend/Modules` folder.
+3. Browse to your Fork CMS backend site.
+4. Go to `Settings > Modules`. Click on the install button next to the discography module.
 5. Have fun!
-
-### Dependencies
-
-**Remark**: If you are using GIT instead of the zip-file from [http://www.fork-cms.com](http://www.fork-cms.com), you
-should install our dependencies. The dependencies are handled by [composer](http://getcomposer.org/)
-
-To install the dependencies, you can run the command below in the document-root:
-
-	composer install -o
 
 ## Bugs
 
-If you encounter any bugs, please create an issue on [Github](https://github.com/forkcms/forkcms/issues).
-If you're stuck or would like to discuss Fork CMS, check out the [forum](http://forum.fork-cms.com)!
+If you encounter any bugs, please create an issue and I'll try to fix it (or feel free to fix it yourself with a pull-request).
 
 ## Discussion
-- IRC: irc.freenode.org #forkcms
-- E-mail: <info@fork-cms.com> for any questions or remarks.
-
-
-
-_The Fork CMS team_
+- Twitter: [@jessedobbelaere](https://www.twitter.com/jessedobbelaere)
+- E-mail: <jesse@dobbelaere-ae.be> for any questions or remarks.

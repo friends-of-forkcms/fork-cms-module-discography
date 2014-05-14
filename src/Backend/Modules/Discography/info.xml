@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>Discography</name>
+	<version>1.3.0</version>
+	<requirements>
+		<minimum_version>Fork CMS 3.7</minimum_version>
+	</requirements>
+	<description>
+		<![CDATA[
+			The discography module let's you add your albums, EP's, compilation albums, ... with their tracklisting and info to your website.
+		]]>
+	</description>
+	<authors>
+		<author>
+			<name><![CDATA[Jesse Dobbelaere]]></name>
+			<url><![CDATA[http://www.djss.be]]></url>
+		</author>
+	</authors>
+	<events>
+	</events>
+</module>
