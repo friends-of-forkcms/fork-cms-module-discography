@@ -122,13 +122,13 @@
                                 <h3>{$lblImage|ucfirst}</h3>
                             </div>
                             <div class="options clearfix">
-                                {option:item.image}
+                                {option:item}
                                     <p class="imageHolder">
                                         <img src="{$FRONTEND_FILES_URL}/discography/images/128x128/{$item.image}" width="128" height="128" alt="{$lblImage|ucfirst}" />
                                         <label for="deleteImage">{$chkDeleteImage} {$lblDelete|ucfirst}</label>
                                         {$chkDeleteImageError}
                                     </p>
-                                {/option:item.image}
+                                {/option:item}
                                 <p>
                                     <label for="image">{$lblImage|ucfirst}</label>
                                     {$fileImage} {$fileImageError}

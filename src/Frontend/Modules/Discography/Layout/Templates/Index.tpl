@@ -38,6 +38,5 @@
         {option:!items.last} <hr> {/option:!items.last}
         {/iteration:items}
     </div>
-
-    {include:core/layout/templates/pagination.tpl}
+    
 {/option:items}

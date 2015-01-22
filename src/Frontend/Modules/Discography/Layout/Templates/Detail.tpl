@@ -42,6 +42,4 @@
         <p>
             <a href="{$discographyUrl}" class="button">{$lblPrevious}</a>
         </p>
-
-    {include:core/layout/templates/pagination.tpl}
 {/option:album}
